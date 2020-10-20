@@ -16,18 +16,43 @@ import java.util.List;
 @Controller
 public class CatController {
     @GetMapping(path = "/cat")
-    public @ResponseBody ArrayList<Cat> getCats(HttpServletRequest request, HttpServletResponse response) {
+    public @ResponseBody ArrayList<Cat> getCats(
+            @PathParam("owner") String owner,
+            @PathParam("race") String race,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
         ArrayList<Cat> list = new ArrayList<Cat>();
+
 
         try {
             Class.forName("org.h2.Driver");
             conn = DriverManager.getConnection("jdbc:h2:./src/main/resources/db", "sa", "");
             stmt = conn.createStatement();
 
-            rs = stmt.executeQuery("SELECT * FROM cats");
+            String sql = "SELECT * FROM cats";
+            if (owner != null || race != null) {
+                sql += " WHERE ";
+                if (owner != null) {
+                    rs = stmt.executeQuery("SELECT id FROM owners WHERE name = '" + owner + "'");
+                    rs.next();
+                    owner = rs.getInt("id") + "";
+                    rs.close();
+                    sql += "owner = '" + owner + "'";
+                    if (race != null) { sql += " AND "; }
+                }
+                if (race != null) {
+                    rs = stmt.executeQuery("SELECT id FROM races WHERE name = '" + race + "'");
+                    rs.next();
+                    race = rs.getInt("id") + "";
+                    rs.close();
+                    sql += "race = '" + race + "'";
+                }
+            }
+            rs = stmt.executeQuery(sql);
             while(rs.next()) {
                 list.add(new Cat(
                     rs.getInt("id"),
