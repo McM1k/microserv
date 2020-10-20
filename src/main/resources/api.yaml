@@ -29,6 +29,19 @@ paths:
       produces:
         - "application/xml"
         - "application/json"
+      parameters:
+        - name: "owner"
+          in: "query"
+          description: "name of owner"
+          type: "string"
+          required: false
+          format: "string"
+        - name: "race"
+          in: "query"
+          description: "name of race"
+          type: "string"
+          required: false
+          format: "string"
       responses:
         "200":
           description: "successful operation"
@@ -242,7 +255,7 @@ paths:
       responses:
         "404":
           description: "owner not found"
-          
+
   /races:
     get:
       tags:
@@ -281,79 +294,79 @@ paths:
           description: "successful operation"
   /races/{raceId}:
     get:
-        tags:
-          - "races"
-        summary: "Display one race"
-        description: "Returns a single race"
-        operationId: "getRaceById"
-        produces:
-          - "application/xml"
-          - "application/json"
-        parameters:
-          - name: "raceId"
-            in: "path"
-            description: "ID of race to return"
-            type: "integer"
-            required: true
-            format: "int64"
-        responses:
-          "200":
-            description: "successful operation"
-            schema:
-              $ref: "#/definitions/Race"
-          "404":
-            description: "race not found"
+      tags:
+        - "races"
+      summary: "Display one race"
+      description: "Returns a single race"
+      operationId: "getRaceById"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "raceId"
+          in: "path"
+          description: "ID of race to return"
+          type: "integer"
+          required: true
+          format: "int64"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Race"
+        "404":
+          description: "race not found"
     post:
-        tags:
-          - "races"
-        summary: "Updates a race"
-        description: ""
-        operationId: "updateRace"
-        consumes:
-          - "application/json"
-          - "application/xml"
-        produces:
-          - "application/xml"
-          - "application/json"
-        parameters:
-          - name: "raceId"
-            in: "path"
-            description: "ID of race that needs to be updated"
-            required: true
-            type: "integer"
-            format: "int64"
-          - in: "body"
-            name: "body"
-            description: "Race object that need to be updated"
-            required: true
-            schema:
-              $ref: "#/definitions/Race"
-        responses:
-          "405":
-            description: "Invalid input"
+      tags:
+        - "races"
+      summary: "Updates a race"
+      description: ""
+      operationId: "updateRace"
+      consumes:
+        - "application/json"
+        - "application/xml"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "raceId"
+          in: "path"
+          description: "ID of race that needs to be updated"
+          required: true
+          type: "integer"
+          format: "int64"
+        - in: "body"
+          name: "body"
+          description: "Race object that need to be updated"
+          required: true
+          schema:
+            $ref: "#/definitions/Race"
+      responses:
+        "405":
+          description: "Invalid input"
     delete:
-        tags:
-          - "races"
-        summary: "Deletes a race"
-        description: ""
-        operationId: "deleteRace"
-        produces:
-          - "application/xml"
-          - "application/json"
-        parameters:
-          - name: "api_key"
-            in: "header"
-            required: false
-            type: "string"
-          - name: "raceId"
-            in: "path"
-            description: "race id to delete"
-            required: true
-            type: "integer"
-            format: "int64"
-        responses:
-          "404":
-            description: "race not found"
+      tags:
+        - "races"
+      summary: "Deletes a race"
+      description: ""
+      operationId: "deleteRace"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "api_key"
+          in: "header"
+          required: false
+          type: "string"
+        - name: "raceId"
+          in: "path"
+          description: "race id to delete"
+          required: true
+          type: "integer"
+          format: "int64"
+      responses:
+        "404":
+          description: "race not found"
 
 definitions:
   Owner:

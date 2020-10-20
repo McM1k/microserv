@@ -29,6 +29,36 @@
 					"response": []
 				},
 				{
+					"name": "getCats?owner",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/cat?owner=john",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cat"
+							],
+							"query": [
+								{
+									"key": "owner",
+									"value": "john"
+								},
+								{
+									"key": "race",
+									"value": "normal",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "getCatById",
 					"request": {
 						"method": "GET",
