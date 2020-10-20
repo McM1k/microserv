@@ -14,27 +14,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class CatController {
-    @GetMapping(path = "/cat")
-    public @ResponseBody ArrayList<Cat> getCats(HttpServletRequest request, HttpServletResponse response) {
+public class OwnerController {
+    @GetMapping(path = "/owner")
+    public @ResponseBody ArrayList<Owner> getOwners(HttpServletRequest request, HttpServletResponse response) {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
-        ArrayList<Cat> list = new ArrayList<Cat>();
+        ArrayList<Owner> list = new ArrayList<Owner>();
 
         try {
             Class.forName("org.h2.Driver");
             conn = DriverManager.getConnection("jdbc:h2:./src/main/resources/db", "sa", "");
             stmt = conn.createStatement();
 
-            rs = stmt.executeQuery("SELECT * FROM cats");
+            rs = stmt.executeQuery("SELECT * FROM owners");
             while(rs.next()) {
-                list.add(new Cat(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("color"),
-                    rs.getInt("race"),
-                    rs.getInt("owner")
+                list.add(new Owner(
+                        rs.getInt("id"),
+                        rs.getString("name")
                 ));
             }
             rs.close();
@@ -53,25 +50,22 @@ public class CatController {
         return list;
     }
 
-    @GetMapping(path = "/cat/{catId}")
-    public @ResponseBody Cat getCatById(@PathVariable("catId") String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @GetMapping(path = "/owner/{ownerId}")
+    public @ResponseBody Owner getOwnerById(@PathVariable("ownerId") String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
-        Cat cat = new Cat();
+        Owner owner = new Owner();
 
 
         try {
             Class.forName("org.h2.Driver");
             conn = DriverManager.getConnection("jdbc:h2:./src/main/resources/db", "sa", "");
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM cats WHERE id=" + id);
+            rs = stmt.executeQuery("SELECT * FROM owners WHERE id=" + id);
             rs.next();
-            cat = new Cat(rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("color"),
-                    rs.getInt("race"),
-                    rs.getInt("owner")
+            owner = new Owner(rs.getInt("id"),
+                    rs.getString("name")
             );
 
             rs.close();
@@ -87,11 +81,11 @@ public class CatController {
                 se.printStackTrace();
             }
         }
-        return cat;
+        return owner;
     }
 
-    @PostMapping(path = "/cat")
-    public void addCat(@RequestBody Cat cat, HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping(path = "/owner")
+    public void addOwner(@RequestBody Owner owner, HttpServletRequest request, HttpServletResponse response) {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -100,13 +94,12 @@ public class CatController {
             Class.forName("org.h2.Driver");
             conn = DriverManager.getConnection("jdbc:h2:./src/main/resources/db", "sa", "");
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT COUNT(*) FROM cats");
+            rs = stmt.executeQuery("SELECT COUNT(*) FROM owners");
             rs.next();
             int id = rs.getInt("COUNT(*)") + 1;
             rs.close();
-            rs = stmt.executeQuery("SELECT * FROM cats");
-            stmt.execute("INSERT INTO cats VALUES("+ id + ", '" + cat.getName() + "', " + cat.getRace() + ", '"
-                    + cat.getColor().toString() + "', " + cat.getOwner() +")");
+            rs = stmt.executeQuery("SELECT * FROM owners");
+            stmt.execute("INSERT INTO owners VALUES("+ id + ", '" + owner.getName() + "')");
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -122,8 +115,8 @@ public class CatController {
         }
     }
 
-    @PostMapping(path = "/cat/{catId}")
-    public void updateCat(@PathVariable("catId") String id, @RequestBody Cat cat, HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping(path = "/owner/{ownerId}")
+    public void updateOwner(@PathVariable("ownerId") String id, @RequestBody Owner owner, HttpServletRequest request, HttpServletResponse response) {
         Connection conn = null;
         Statement stmt = null;
 
@@ -131,9 +124,7 @@ public class CatController {
             Class.forName("org.h2.Driver");
             conn = DriverManager.getConnection("jdbc:h2:./src/main/resources/db", "sa", "");
             stmt = conn.createStatement();
-            stmt.execute("UPDATE cats SET name = '" + cat.getName() + "', race = " + cat.getRace()
-                    + ", color = '" + cat.getColor().toString() + "', owner = " + cat.getOwner()
-                    +" WHERE id = " + id);
+            stmt.execute("UPDATE owners SET name = '" + owner.getName() + "' WHERE id = " + id);
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -149,8 +140,8 @@ public class CatController {
         }
     }
 
-    @DeleteMapping(path = "/cat/{catId}")
-    public void deleteCat(@PathVariable("catId") String id, HttpServletRequest request, HttpServletResponse response) {
+    @DeleteMapping(path = "/owner/{ownerId}")
+    public void deleteOwner(@PathVariable("ownerId") String id, HttpServletRequest request, HttpServletResponse response) {
         Connection conn = null;
         Statement stmt = null;
 
@@ -158,7 +149,7 @@ public class CatController {
             Class.forName("org.h2.Driver");
             conn = DriverManager.getConnection("jdbc:h2:./src/main/resources/db", "sa", "");
             stmt = conn.createStatement();
-            stmt.execute("DELETE FROM cats WHERE id = " + id);
+            stmt.execute("DELETE FROM owners WHERE id = " + id);
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
